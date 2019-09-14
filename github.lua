@@ -194,7 +194,7 @@ local function main()
         Funktion.Hilfe()
     else
         fs.makeDirectory("/temp")
-        local a = "https://raw.githubusercontent.com/Nex4rius/Nex4rius-Programme/master/GitHub-Downloader/"
+        local a = "https://raw.githubusercontent.com/DEVensiv/GitDowloader/master/"
         if wget("-fQ", a .. "github.lua", "/temp/github.lua") then
             verschieben("/temp/github.lua", "/bin/github.lua")
         end
@@ -218,7 +218,7 @@ if not ergebnis then
     if grund == "not enough memory" and option.f then
         if not link then link = "" end
         if not sha then sha = "" end
-        os.execute(string.format("pastebin run -f MHq2tN5B -o %s %s %s %s", name, repo, tree, link, sha))
+        os.execute(string.format("pastebin run -f paUSHQQC -o %s %s %s %s", name, repo, tree, link, sha))
     end
 end
 
