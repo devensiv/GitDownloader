@@ -216,7 +216,6 @@ local function main()
     end
 end
 
-Funktion.status()
 local ergebnis, grund = pcall(main)
 
 if not ergebnis then
