@@ -142,7 +142,7 @@ function Funktion.verarbeiten()
         end
     end
     print("\nStarte Download\n")
-    local pfad = "/update"
+    local pfad = "/" .. repo
     if options.o then
         pfad = ""
     end
@@ -169,17 +169,6 @@ function Funktion.verarbeiten()
         gpu.setForeground(0x00FF00)
         print("\nDownload Beendet\n")
         gpu.setForeground(0xFFFFFF)
-        print("Ersetze alte Dateien")
-        local function kopieren(...)
-            for i in fs.list(...) do
-                if fs.isDirectory(i) then
-                    kopieren(i)
-                end
-                verschieben("/update/" .. i, "/" .. i)
-            end
-        end
-        kopieren(...)
-        entfernen("/update")
         entfernen("/temp")
         gpu.setForeground(0x00FF00)
         print("\nUpdate vollständig")
