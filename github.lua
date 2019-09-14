@@ -42,11 +42,6 @@ else
 end
 
 function Funktion.status()
-    gpu.set(x, 1, string.rep(" ", 35))
-    gpu.set(x, 3, string.rep(" ", 35))
-    gpu.set(x, 5, string.rep(" ", 35))
-    gpu.set(x, 7, string.rep(" ", 35))
-    gpu.set(x, 8, string.rep(" ", 35))
 end
 
 function Funktion.Hilfe()
