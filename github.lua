@@ -147,7 +147,6 @@ function Funktion.verarbeiten()
         pfad = ""
     end
     for i in pairs(dateien.tree) do
-        Funktion.status()
         if dateien.tree[i].type == "blob" and dateien.tree[i].path ~= "README.md" then
             if not wget("-f", string.format("https://raw.githubusercontent.com/%s/%s/%s/%s", name, repo, tree, link) .. dateien.tree[i].path, pfad .. "/" .. dateien.tree[i].path) then
                 komplett = false
