@@ -63,7 +63,6 @@ function Funktion.checkKomponenten()
     local weiter = true
     print("Prüfe Komponenten\n")
     local function check(eingabe)
-        Funktion.status()
         if component.isAvailable(eingabe[1]) then
             gpu.setForeground(0x00FF00)
             print(eingabe[2])
@@ -91,7 +90,6 @@ end
 
 function Funktion.verarbeiten()
     print("\nDownloade Verzeichnisliste\n")
-    Funktion.status()
     if sha then
         if not wget("-f", string.format("https://api.github.com/repos/%s/%s/git/trees/%s?recursive=1", name, repo, sha), "/temp/github-liste.txt") then
             gpu.setForeground(0xFF0000)
@@ -105,7 +103,6 @@ function Funktion.verarbeiten()
             return 
         end
     end
-    Funktion.status()
     local f = io.open("/temp/github-liste.txt", "r")
     print("\nKonvertiere: JSON -> Lua table\n")
     local dateien = loadfile("/temp/json.lua")():decode(f:read("*all"))
@@ -114,7 +111,6 @@ function Funktion.verarbeiten()
     print()
     if link then
         for i in pairs(dateien.tree) do
-            Funktion.status()
             if dateien.tree[i].path == link then
                 sha = dateien.tree[i].sha
                 break
@@ -139,7 +135,6 @@ function Funktion.verarbeiten()
     local komplett = true
     print("Erstelle Verzeichnisse\n")
     for i in pairs(dateien.tree) do
-        Funktion.status()
         if dateien.tree[i].type == "tree" then
             fs.makeDirectory("/update/" .. dateien.tree[i].path)
             print("/update/" .. dateien.tree[i].path)
@@ -152,7 +147,6 @@ function Funktion.verarbeiten()
         pfad = ""
     end
     for i in pairs(dateien.tree) do
-        Funktion.status()
         if dateien.tree[i].type == "blob" and dateien.tree[i].path ~= "README.md" then
             if not wget("-f", string.format("https://raw.githubusercontent.com/%s/%s/%s/%s", name, repo, tree, link) .. dateien.tree[i].path, pfad .. "/" .. dateien.tree[i].path) then
                 komplett = false
@@ -182,7 +176,6 @@ function Funktion.verarbeiten()
                     kopieren(i)
                 end
                 verschieben("/update/" .. i, "/" .. i)
-                Funktion.status()
             end
         end
         entfernen("/update")
