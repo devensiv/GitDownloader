@@ -41,9 +41,6 @@ else
     hilfe = true
 end
 
-function Funktion.status()
-end
-
 function Funktion.Hilfe()
     print([==[Benutzung: github [-f] name repo tree [link [sha]]]==])
     print([==[sha nur benötigt bei sehr großen Repositories]==])
