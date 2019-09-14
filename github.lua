@@ -178,7 +178,8 @@ function Funktion.verarbeiten()
                 verschieben("/update/" .. i, "/" .. i)
             end
         end
-        --entfernen("/update")
+        kopieren(...)
+        entfernen("/update")
         entfernen("/temp")
         gpu.setForeground(0x00FF00)
         print("\nUpdate vollständig")
