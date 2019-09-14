@@ -142,7 +142,7 @@ function Funktion.verarbeiten()
         end
     end
     print("\nStarte Download\n")
-    local pfad = "/update"
+    local pfad = "/"
     if options.o then
         pfad = ""
     end
