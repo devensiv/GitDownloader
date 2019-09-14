@@ -175,6 +175,7 @@ function Funktion.verarbeiten()
                 if fs.isDirectory(i) then
                     kopieren(i)
                 end
+                print("verschiebe" .. i)
                 verschieben("/update/" .. i, "/" .. i)
             end
         end
