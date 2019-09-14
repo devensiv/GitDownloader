@@ -194,7 +194,7 @@ local function main()
         Funktion.Hilfe()
     else
         fs.makeDirectory("/temp")
-        local a = "https://raw.githubusercontent.com/DEVensiv/GitDowloader/master/"
+        local a = "https://raw.githubusercontent.com/DEVensiv/GitDownloader/master/"
         if wget("-fQ", a .. "github.lua", "/temp/github.lua") then
             verschieben("/temp/github.lua", "/bin/github.lua")
         end
