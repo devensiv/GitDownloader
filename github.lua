@@ -136,8 +136,8 @@ function Funktion.verarbeiten()
     print("Erstelle Verzeichnisse\n")
     for i in pairs(dateien.tree) do
         if dateien.tree[i].type == "tree" then
-            fs.makeDirectory("/update/" .. dateien.tree[i].path)
-            print("/update/" .. dateien.tree[i].path)
+            fs.makeDirectory("/" .. repo .. "/" .. dateien.tree[i].path)
+            print("/" .. repo .. "/" .. dateien.tree[i].path)
             os.sleep(0.1)
         end
     end
@@ -161,7 +161,6 @@ function Funktion.verarbeiten()
             print("<FEHLER> GitHub Dateiliste unvollständig\n")
         end
         gpu.setForeground(0xFFFFFF)
-        entfernen("/update")
         entfernen("/temp")
         shell.setWorkingDirectory(alterPfad)
         os.exit()
