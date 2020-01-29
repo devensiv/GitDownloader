@@ -6,7 +6,7 @@ local args, options = shell.parse(...)
 
 local wget          = loadfile("/bin/wget.lua")
 local verschieben   = function(von, nach) fs.remove(nach) fs.rename(von, nach) print(string.format("%s → %s", fs.canonical(von), fs.canonical(nach))) end
-local entfernen     = function(datei) fs.remove(datei) print(string.format("'%s' wurde gelöscht", datei)) end
+local entfernen     = function(datei) fs.remove(datei) print(string.format("'%s' was deleted", datei)) end
 
 local alterPfad     = shell.getWorkingDirectory()
 
