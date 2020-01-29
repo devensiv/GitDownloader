@@ -21,6 +21,8 @@ else
     gpu.setForeground = function() end
 end
 
+fs.filesystem.setAutorunEnabled(true) --Enable Autorun
+
 shell.setWorkingDirectory("/")
 
 if args1 == "?" then
@@ -42,18 +44,17 @@ else
 end
 
 function Funktion.Hilfe()
-    print([==[Benutzung: github [-f] name repo tree [link [sha]]]==])
-    print([==[sha nur benötigt bei sehr großen Repositories]==])
-    print([==[Bei "-f" werden die Dateien immer sofort überschrieben, nur erforderlich bei geringer Festplattenkapazität. >>>WARNUNG<<< Ein Downloadfehler beim updaten von OpenOS mit "-f" wird dafür sorgen das der Computer nicht mehr bootet.]==])
+    print([==[Usage: github [-f] name repo tree [link [sha]]]==])
+    print([==[sha is only required if you use huge repos with lots of commits]==])
+    print([==[-f to force files to be overwriten]==])
     print()
-    print([==[Beispiele:]==])
-    print([==[github Nex4rius Nex4rius-Programme master Stargate-Programm]==])
+    print([==[Example:]==])
     print([==[github MightyPirates OpenComputers master-MC1.7.10 src/main/resources/assets/opencomputers/loot/openos/ 285f9c8fa60abf54dd6b199c895c9e07943c6d1d]==])
     print()
-    print([==[Hilfetext:]==])
+    print([==[Help page:]==])
     print([==[github ?]==])
     print()
-    print([==[Einbindung in Programme:]==])
+    print([==[Usage in programms:]==])
     print([==[1) loadfile("/bin/github.lua")(name:string, repo:string, tree:string[, link:string[, sha:string]])]==])
     print([==[2) loadfile("/bin/pastebin.lua")("-f", "run", "MHq2tN5B", name:string, repo:string, tree:string[, link:string[, sha:string]])]==])
 end
@@ -61,7 +62,7 @@ end
 function Funktion.checkKomponenten()
     require("term").clear()
     local weiter = true
-    print("Prüfe Komponenten\n")
+    print("Checking for components\n")
     local function check(eingabe)
         if component.isAvailable(eingabe[1]) then
             gpu.setForeground(0x00FF00)
@@ -75,8 +76,8 @@ function Funktion.checkKomponenten()
         end
     end
     local alleKomponenten = {
-        {"internet", "- Internet   ok"           , "- Internet   fehlt"           , true},
-        {"gpu"     , "- GPU        ok - optional", "- GPU        fehlt - optional", },
+        {"internet", "- Internet Card   ok"           , "- Internet Card   missing"           , true},
+        {"gpu"     , "- GPU        ok - optional", "- GPU        missing - optional", },
     }
     for i in pairs(alleKomponenten) do
         check(alleKomponenten[i])
@@ -89,22 +90,22 @@ function Funktion.checkKomponenten()
 end
 
 function Funktion.verarbeiten()
-    print("\nDownloade Verzeichnisliste\n")
+    print("\nDownload index\n")
     if sha then
         if not wget("-f", string.format("https://api.github.com/repos/%s/%s/git/trees/%s?recursive=1", name, repo, sha), "/temp/github-liste.txt") then
             gpu.setForeground(0xFF0000)
-            print("<FEHLER> GitHub Download")
+            print("<ERROR> GitHub Download")
             return 
         end
     else
         if not wget("-f", string.format("https://api.github.com/repos/%s/%s/git/trees/%s?recursive=1", name, repo, tree), "/temp/github-liste.txt") then
             gpu.setForeground(0xFF0000)
-            print("<FEHLER> GitHub Download")
+            print("<ERROR> GitHub Download")
             return 
         end
     end
     local f = io.open("/temp/github-liste.txt", "r")
-    print("\nKonvertiere: JSON -> Lua table\n")
+    print("\nConverting: JSON -> Lua table\n")
     local dateien = loadfile("/temp/json.lua")():decode(f:read("*all"))
     f:close()
     entfernen("/temp/github-liste.txt")
@@ -118,11 +119,11 @@ function Funktion.verarbeiten()
         end
         if not wget("-f", string.format("https://api.github.com/repos/%s/%s/git/trees/%s?recursive=1", name, repo, sha), "/temp/github-liste-kurz.txt") then
             gpu.setForeground(0xFF0000)
-            print("<FEHLER> GitHub Download")
+            print("<ERROR> GitHub Download")
             return 
         end
         f = io.open("/temp/github-liste-kurz.txt", "r")
-        print("\nKonvertiere: JSON -> Lua table\n")
+        print("\nConverting: JSON -> Lua table\n")
         dateien = loadfile("/temp/json.lua")():decode(f:read("*all"))
         f:close()
         entfernen("/temp/github-liste-kurz.txt")
@@ -133,7 +134,7 @@ function Funktion.verarbeiten()
     end
     fs.makeDirectory("/update")
     local komplett = true
-    print("Erstelle Verzeichnisse\n")
+    print("Creating directories\n")
     for i in pairs(dateien.tree) do
         if dateien.tree[i].type == "tree" then
             fs.makeDirectory("/" .. repo .. "/" .. dateien.tree[i].path)
@@ -141,7 +142,7 @@ function Funktion.verarbeiten()
             os.sleep(0.1)
         end
     end
-    print("\nStarte Download\n")
+    print("\nStarting Download\n")
     local pfad = "/" .. repo
     if options.o then
         pfad = ""
@@ -156,9 +157,9 @@ function Funktion.verarbeiten()
     end
     if dateien["truncated"] or not komplett then
         gpu.setForeground(0xFF0000)
-        print("\n<FEHLER> Download unvollständig\n")
+        print("\n<ERROR> Download failed\n")
         if dateien["truncated"] then
-            print("<FEHLER> GitHub Dateiliste unvollständig\n")
+            print("<ERROR> GitHub index incomplete\n")
         end
         gpu.setForeground(0xFFFFFF)
         entfernen("/temp")
@@ -166,11 +167,11 @@ function Funktion.verarbeiten()
         os.exit()
     else
         gpu.setForeground(0x00FF00)
-        print("\nDownload Beendet\n")
+        print("\nDownload successfull\n")
         gpu.setForeground(0xFFFFFF)
         entfernen("/temp")
         gpu.setForeground(0x00FF00)
-        print("\nUpdate vollständig")
+        print("\nGithub Dowloader Complete")
         os.sleep(2)
         return true
     end
@@ -187,14 +188,14 @@ local function main()
         if wget("-fQ", a .. "github.lua", "/temp/github.lua") then
             verschieben("/temp/github.lua", "/bin/github.lua")
         end
-        print("Downloade Konverter\n")
+        print("Downloading Converter\n")
         if wget("-f", a .. "json.lua", "/temp/json.lua") then
             if Funktion.verarbeiten() then
                 return true
             end
         end
         gpu.setForeground(0xFF0000)
-        print("<FEHLER> Download")
+        print("<ERROR> Converter Download")
     end
 end
 
@@ -202,7 +203,7 @@ local ergebnis, grund = pcall(main)
 
 if not ergebnis then
     gpu.setForeground(0xFF0000)
-    print("<FEHLER> main")
+    print("<ERROR> main")
     print(grund)
     if grund == "not enough memory" and option.f then
         if not link then link = "" end
