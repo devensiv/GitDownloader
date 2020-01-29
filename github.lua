@@ -21,7 +21,7 @@ else
     gpu.setForeground = function() end
 end
 
-fs.filesystem.setAutorunEnabled(true) --Enable Autorun
+fs.setAutorunEnabled(true) --Enable Autorun
 
 shell.setWorkingDirectory("/")
 
